@@ -13,6 +13,7 @@ alias du="du -hc"
 alias mv="mv -iv"
 alias cp="cp -v"
 alias nano='nano -Wx'
+alias caps="setxkbmap -option ctrl:nocaps"
 
 
 # Various
