@@ -1,10 +1,10 @@
 alias ls='ls --color=auto'
 alias q='exit'
 alias ..="cd .."
-alias install='sudo aptitude install'
-alias search='apt search'
-alias update='sudo apt update'
-alias upgrade='sudo apt upgrade'
+alias install='sudo nala install'
+alias search='nala search'
+alias update='sudo nala update'
+alias upgrade='sudo nala upgrade'
 alias cls="clear"
 alias ll="ls -lhav"
 alias ls="ls -v --color=auto"
@@ -12,11 +12,7 @@ alias df="df -h"
 alias du="du -hc"
 alias mv="mv -iv"
 alias cp="cp -v"
-alias pacman="yaourt "
-alias info=" perl /home/ender/scripts/info2.pl;inxi -v5"
 alias nano='nano -Wx'
-alias weather="sh scripts/weather.sh 32404"
-alias aptitude="sudo aptitude"
 
 
 # Various
