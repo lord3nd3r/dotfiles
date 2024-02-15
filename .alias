@@ -1,0 +1,53 @@
+alias ls='ls --color=auto'
+alias q='exit'
+alias ..="cd .."
+alias install='sudo aptitude install'
+alias search='apt search'
+alias update='sudo apt update'
+alias upgrade='sudo apt upgrade'
+alias cls="clear"
+alias ll="ls -lhav"
+alias ls="ls -v --color=auto"
+alias df="df -h"
+alias du="du -hc"
+alias mv="mv -iv"
+alias cp="cp -v"
+alias pacman="yaourt "
+alias info=" perl /home/ender/scripts/info2.pl;inxi -v5"
+alias nano='nano -Wx'
+alias weather="sh scripts/weather.sh 32404"
+alias aptitude="sudo aptitude"
+
+
+# Various
+
+alias iso='sudo mount -o loop $1 $2'
+alias mount.filer='sudo mount host:/dir /dir'
+alias lc='wc -l'
+alias gh='history | grep'
+alias fs='du --max-depth=1 -h'
+alias irc='screen -d -m -S irssi /usr/bin/irssi'
+
+###############################################
+
+
+alias allrepo='cat /etc/apt/sources.list `ls /etc/apt/sources.list.d/*.list` | egrep -v "^$"'
+alias search='apt-cache search' #search a package
+alias show='apt-cache show' #display package information
+alias repo='allrepo | egrep -v "^#"' #display all active repo
+alias saar='sudo add-apt-repository' #add a repo to repo .list
+alias sag='sudo apt-get' # simple apt-get shortcut
+alias sagar='sudo apt-get autoremove' # autoremove
+alias sagc='sudo apt-get clean' #clean package cache
+alias sagi='sudo apt-get install' #install a package
+alias sagir='sudo apt-get install --reinstall' #reinstall a package
+alias sagp='sudo apt-get purge' #purge a package
+alias sagu='sudo apt-get update' #update repo's packages list
+alias sagud='sudo apt-get dist-upgrade' #dist-upgrade
+alias sagui='sagu && sagi' # update repo & install package (usefull when u just added a repo)
+alias sagup='sudo apt-get upgrade' #package upgrade
+alias sagupd='sagu && sagup -y && sagud' #global update
+alias ska='sudo killall' #kill process by name
+alias sug='sudo update-grub' #update grub
+alias sug2='sudo update-grub2' #update grub2
+alias suse='sudo service' #access a system service 
