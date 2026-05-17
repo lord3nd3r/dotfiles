@@ -1,0 +1,14 @@
+# Never commit secrets
+.secrets
+*.key
+*.pem
+
+# Editor backups
+*~
+*.swp
+*.swo
+.*.bak
+
+# OS junk
+.DS_Store
+Thumbs.db

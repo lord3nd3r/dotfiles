@@ -1,0 +1,161 @@
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  ~/.alias — 3ND3R SYSTEMS aliases                           ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
+# === FILE & DIRECTORY NAVIGATION ======================================
+alias ls='ls -v --color=auto --group-directories-first'
+alias ll='ls -lhav --time-style=long-iso'
+alias la='ls -A'
+alias lt='ls -lhart'                    # Sort by date, oldest first
+alias lz='ls -lhaSr'                    # Sort by size, smallest first
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias home='cd ~'
+alias mkdir='mkdir -pv'
+alias tree='tree -C --dirsfirst'
+
+# === SYSTEM MONITORING ================================================
+alias df='df -hT'                       # Show filesystem type too
+alias du='du -hc'
+alias top='htop'
+alias free='free -mh'
+alias ps='ps auxf'
+alias fs='du --max-depth=1 -h | sort -h'  # Sort by size
+alias mem='free -mh | head -2'
+alias cpu='lscpu | grep -E "^(Arch|CPU\(|Thread|Model name|CPU MHz)"'
+alias temps='sensors 2>/dev/null || echo "Install lm-sensors"'
+
+# === PACKAGE MANAGEMENT ===============================================
+alias aptup='sudo apt update && sudo apt upgrade -y'
+alias aptin='sudo apt install'
+alias aptclean='sudo apt autoremove && sudo apt autoclean'
+alias aptsearch='apt search'
+alias aptlist='apt list --installed 2>/dev/null'
+alias sag='sudo apt-get'
+alias sagar='sudo apt-get autoremove'
+alias sagc='sudo apt-get clean'
+alias sagi='sudo apt-get install'
+alias sagir='sudo apt-get install --reinstall'
+alias sagp='sudo apt-get purge'
+alias sagu='sudo apt-get update'
+alias sagud='sudo apt-get dist-upgrade'
+alias sagup='sudo apt-get upgrade'
+alias sagupd='sagu && sagup -y && sagud'
+alias saar='sudo add-apt-repository'
+
+# === FILE MANIPULATION (safety first) ================================
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias rm='rm -iv'
+alias ln='ln -sv'
+alias rsync='rsync -avhP'               # Archive, verbose, human, progress
+
+# === TEXT PROCESSING ==================================================
+alias cat='batcat --style=plain 2>/dev/null || command cat'
+alias bat='batcat'
+alias less='less -RFX'
+alias grep='grep --color=auto -i'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+alias findhere='find . -name'
+alias lc='wc -l'
+alias diff='diff --color=auto'
+alias head='head -n 20'
+alias tail='tail -n 20'
+
+# === SYSTEM UTILITIES =================================================
+alias reboot='sudo reboot'
+alias shutdown='sudo shutdown now'
+alias ping='ping -c 4'
+alias cls='clear'
+alias c='clear'
+alias ska='sudo killall'
+alias sug='sudo update-grub'
+alias sug2='sudo update-grub2'
+alias suse='sudo service'
+alias sc='sudo systemctl'
+alias sce='sudo systemctl enable'
+alias scs='sudo systemctl start'
+alias scr='sudo systemctl restart'
+alias sct='sudo systemctl stop'
+alias scl='sudo systemctl status'
+alias jlog='sudo journalctl -xe'
+alias jfu='sudo journalctl -fu'         # Follow unit logs
+
+# === NETWORK ==========================================================
+alias myip='curl -s ipinfo.io/ip && echo'
+alias localip='hostname -I | awk "{print \$1}"'
+alias ports='sudo ss -tulnp'
+alias openports='sudo ss -tulnp | grep LISTEN'
+alias speedtest='curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python3 -'
+alias header='curl -I'
+alias pingg='ping -c 3 8.8.8.8'
+
+# === DEVELOPMENT ======================================================
+alias py='python3'
+alias pip='pip3'
+alias venv='python3 -m venv'
+alias activate='source venv/bin/activate'
+alias nano='nano -Wx'
+alias caps='setxkbmap -option ctrl:nocaps'
+alias ai='ollama run llama2-uncensored'
+
+# === GIT (comprehensive) =============================================
+alias gs='git status -sb'               # Short + branch
+alias ga='git add'
+alias gaa='git add --all'
+alias gc='git commit -m'
+alias gca='git commit --amend --no-edit'
+alias gp='git push'
+alias gpf='git push --force-with-lease'
+alias gl='git pull --rebase'
+alias gd='git diff'
+alias gds='git diff --staged'
+alias gb='git branch -vv'
+alias gco='git checkout'
+alias gsw='git switch'
+alias glog='git log --oneline --graph --all --decorate -20'
+alias gloga='git log --oneline --graph --all --decorate'
+alias gstash='git stash push -m'
+alias gpop='git stash pop'
+alias gblame='git blame -w -C'
+alias gwho='git shortlog -sn --no-merges'
+
+# === DOCKER ===========================================================
+alias dk='docker'
+alias dkps='docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dkpsa='docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"'
+alias dki='docker images'
+alias dkl='docker logs -f'
+alias dkx='docker exec -it'
+alias dkc='docker compose'
+alias dkcu='docker compose up -d'
+alias dkcd='docker compose down'
+
+# === CUSTOM SCRIPTS & SSH =============================================
+alias weather='sh ~/scripts/weather.sh 32444'
+alias forecast='sh ~/scripts/forecast.sh 32444'
+alias s='~/scripts/s.sh'
+
+# === REPO INSPECTION ==================================================
+alias allrepo='cat /etc/apt/sources.list $(ls /etc/apt/sources.list.d/*.list 2>/dev/null) 2>/dev/null | grep -Ev "^$"'
+alias repo='allrepo | grep -Ev "^#"'
+
+# === MISCELLANEOUS ====================================================
+alias iso='sudo mount -o loop'
+alias gh='history | grep'
+alias irc='screen -d -m -S irssi /usr/bin/irssi'
+alias h='history 30'
+alias j='jobs -l'
+alias path='echo $PATH | tr ":" "\n" | nl'
+alias now='date +"%F %T %Z"'
+alias week='date +%V'
+alias q='exit'
+alias please='sudo $(fc -ln -1)'        # Re-run last command as sudo
+alias olama-update='curl -fsSL https://ollama.com/install.sh | sh'
+alias nethack='nethack -dec'
+alias edit='nano'
+alias map='telnet mapscii.me'
+alias reload='source ~/.bashrc && echo "✓ Reloaded"'

@@ -1,0 +1,198 @@
+# ╔═══════════════════════════════════════════════════════════════╗
+# ║  ~/.functions — Shell functions for 3ND3R SYSTEMS            ║
+# ║  Recovered from .bashrc.old (2012) + new additions           ║
+# ╚═══════════════════════════════════════════════════════════════╝
+
+# === ARCHIVE EXTRACTION ===============================================
+# Universal extractor — handles every format you'll ever encounter
+extract() {
+    if [ -z "$1" ]; then
+        echo "Usage: extract <archive>"
+        return 1
+    fi
+    if [ ! -f "$1" ]; then
+        echo "'$1' is not a valid file"
+        return 1
+    fi
+    case "$1" in
+        *.tar.bz2) tar xjf "$1"    ;;
+        *.tar.gz)  tar xzf "$1"    ;;
+        *.tar.xz)  tar xJf "$1"    ;;
+        *.tar.zst) tar --zstd -xf "$1" ;;
+        *.bz2)     bunzip2 "$1"    ;;
+        *.rar)     unrar x "$1"    ;;
+        *.gz)      gunzip "$1"     ;;
+        *.tar)     tar xf "$1"     ;;
+        *.tbz2)    tar xjf "$1"    ;;
+        *.tgz)     tar xzf "$1"    ;;
+        *.zip)     unzip "$1"      ;;
+        *.Z)       uncompress "$1" ;;
+        *.7z)      7z x "$1"       ;;
+        *.xz)      xz -d "$1"     ;;
+        *.deb)     ar x "$1"       ;;
+        *.rpm)     rpm2cpio "$1" | cpio -idmv ;;
+        *)         echo "'$1' — unknown archive format" ;;
+    esac
+}
+
+# === FILE UTILITIES ===================================================
+# Swap two files atomically
+swap() {
+    if [ $# -ne 2 ]; then
+        echo "Usage: swap <file1> <file2>"; return 1
+    fi
+    [ ! -e "$1" ] && echo "swap: '$1' does not exist" && return 1
+    [ ! -e "$2" ] && echo "swap: '$2' does not exist" && return 1
+    local tmp="tmp.$$"
+    mv "$1" "$tmp" && mv "$2" "$1" && mv "$tmp" "$2"
+}
+
+# Create a directory and cd into it
+mkcd() {
+    mkdir -p "$1" && cd "$1" || return
+}
+
+# Take ownership of files/dirs
+grab() {
+    sudo chown -R "${USER}:${USER}" "${1:-.}"
+}
+
+# === PROCESS UTILITIES ================================================
+# grep through processes (excludes grep itself)
+psgrep() {
+    if [ -z "$1" ]; then
+        echo "Usage: psgrep <name>"
+        return 1
+    fi
+    echo -e "\e[1m  PID   USER     CPU  MEM   COMMAND\e[0m"
+    ps aux | grep -i "$1" | grep -v "grep.*$1"
+}
+
+# Kill a process by name
+pskill() {
+    if [ -z "$1" ]; then
+        echo "Usage: pskill <name>"
+        return 1
+    fi
+    psgrep "$1"
+    echo ""
+    read -p "Kill these processes? [y/N] " -n 1 -r
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]] && pkill -f "$1" && echo "Done."
+}
+
+# What's using a specific port?
+port() {
+    if [ -z "$1" ]; then
+        echo "Usage: port <number>"
+        return 1
+    fi
+    sudo lsof -i :"$1" 2>/dev/null || sudo ss -tlnp | grep ":$1 "
+}
+
+# === TEXT & ENCODING ==================================================
+# ROT13 encode/decode
+rot13() {
+    if [ $# -eq 0 ]; then
+        tr 'a-zA-Z' 'n-za-mN-ZA-M'
+    else
+        echo "$*" | tr 'a-zA-Z' 'n-za-mN-ZA-M'
+    fi
+}
+
+# URL encode a string
+urlencode() {
+    python3 -c "import urllib.parse; print(urllib.parse.quote('$*'))"
+}
+
+# URL decode a string
+urldecode() {
+    python3 -c "import urllib.parse; print(urllib.parse.unquote('$*'))"
+}
+
+# === SYSTEM INFO ======================================================
+# Full-system scour search
+scour() {
+    find / -iname "*${1}*" 2>/dev/null
+}
+
+# Directory size calculator
+dirsize() {
+    du -sh "${1:-.}" 2>/dev/null
+}
+
+# Quick system summary
+sysinfo() {
+    local B='\e[1m' D='\e[2m' C='\e[38;5;51m' R='\e[0m'
+    echo -e "${C}${B}Hostname:${R}   $(hostname)"
+    echo -e "${C}${B}Kernel:${R}     $(uname -r)"
+    echo -e "${C}${B}Uptime:${R}     $(uptime -p 2>/dev/null | sed 's/up //')"
+    echo -e "${C}${B}CPU:${R}        $(grep -m1 'model name' /proc/cpuinfo 2>/dev/null | cut -d: -f2 | xargs)"
+    echo -e "${C}${B}Memory:${R}     $(free -h | awk '/^Mem:/{printf "%s used / %s total (%s free)", $3, $2, $4}')"
+    echo -e "${C}${B}Disk:${R}       $(df -h / | awk 'NR==2{printf "%s used / %s total (%s free, %s)", $3, $2, $4, $5}')"
+    echo -e "${C}${B}Load:${R}       $(cat /proc/loadavg | cut -d' ' -f1-3)"
+    echo -e "${C}${B}Public IP:${R}  $(curl -s --max-time 3 ipinfo.io/ip 2>/dev/null || echo 'N/A')"
+}
+
+# === NETWORK ==========================================================
+# Show all listening services
+listening() {
+    sudo ss -tlnp 2>/dev/null | tail -n +2 | awk '{print $4, $6}' | column -t
+}
+
+# === GPG ==============================================================
+encrypt() {
+    gpg -ac --no-options "$1"
+}
+
+decrypt() {
+    gpg --no-options "$1"
+}
+
+# === DIRECTORY BOOKMARKS =============================================
+# Quick save/jump to directory bookmarks
+mark() {
+    mkdir -p ~/.marks
+    ln -sf "$(pwd)" ~/.marks/"${1:?Usage: mark <name>}"
+    echo "Bookmarked $(pwd) as $1"
+}
+
+jump() {
+    cd -P ~/.marks/"${1:?Usage: jump <name>}" 2>/dev/null || \
+        echo "No bookmark '$1'. Use 'marks' to list."
+}
+
+marks() {
+    if [ -d ~/.marks ]; then
+        echo -e "\e[1mBookmarks:\e[0m"
+        ls -l ~/.marks/ 2>/dev/null | awk '/^l/{printf "  \033[38;5;51m%-15s\033[0m → %s\n", $9, $NF}'
+    else
+        echo "No bookmarks yet. Use 'mark <name>' to create one."
+    fi
+}
+
+# === MISC =============================================================
+# Quick HTTP server in current directory
+serve() {
+    local port="${1:-8080}"
+    echo "Serving $(pwd) on http://localhost:${port}"
+    python3 -m http.server "$port"
+}
+
+# Weather shortcut using the script
+wttr() {
+    curl -s "wttr.in/${1:-32444}?format=3" 2>/dev/null
+}
+
+# Calculator
+calc() {
+    python3 -c "from math import *; print($*)"
+}
+
+# Repeat a command N times
+repeat() {
+    local n="$1"; shift
+    for ((i=1; i<=n; i++)); do
+        "$@"
+    done
+}
